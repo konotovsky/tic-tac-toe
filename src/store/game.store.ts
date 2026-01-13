@@ -17,12 +17,13 @@ type GameState = {
   xIsNext: boolean;
   phase: GamePhase;
   score: Score;
+  roundResult: GameResult | null;
   setP1Mark: (p1mark: Player) => void;
   setSquares: (squares: SquareValue[]) => void;
-  setScore: (result: GameResult) => void;
   togglePlayer: () => void;
   startGame: () => void;
   resetGame: () => void;
+  finishRound: (result: GameResult) => void;
 };
 
 const createInitialSquares = () => Array<SquareValue>(9).fill(null);
@@ -48,20 +49,12 @@ export const useGameStore = create<GameState>()(
       squares: createInitialSquares(),
       xIsNext: true,
       phase: "menu",
+      roundResult: null,
       score: {
         X: 0,
         O: 0,
         ties: 0,
       },
-
-      setScore: (result: GameResult) =>
-        set((state) => {
-          if (result === "tie") {
-            state.score.ties += 1;
-          } else {
-            state.score[result] += 1;
-          }
-        }),
 
       setP1Mark: (p1mark) => set({ p1mark }),
 
@@ -73,11 +66,33 @@ export const useGameStore = create<GameState>()(
         }),
 
       startGame: () => {
-        set({ phase: "playing" });
+        set({ phase: "game" });
       },
 
+      finishRound: (result: GameResult) =>
+        set((state) => {
+          if (state.roundResult !== null) return;
+
+          state.roundResult = result;
+
+          if (result === "tie") {
+            state.score.ties += 1;
+          } else {
+            state.score[result] += 1;
+          }
+        }),
+
       resetGame: () => {
-        set({ phase: "menu", squares: createInitialSquares(), xIsNext: true });
+        set({
+          phase: "menu",
+          squares: createInitialSquares(),
+          xIsNext: true,
+          score: {
+            X: 0,
+            O: 0,
+            ties: 0,
+          },
+        });
         localStorage.removeItem("xo-game-storage");
       },
     })),

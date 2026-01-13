@@ -1,4 +1,4 @@
-import type { Player, SquareValue, Winner } from "@/types/game.types";
+import type { SquareValue, Winner } from "@/types/game.types";
 
 const WINNING_LINES = [
   [0, 1, 2],
@@ -23,12 +23,6 @@ export function calculateWinner(squares: SquareValue[]): Winner {
 export function calculateTurns(squares: SquareValue[]) {
   return squares.filter(Boolean).length;
 }
-
-// export function calculateStatus(winner: Winner, turns: number, player: Player) {
-//   if (winner) return `Winner ${winner.player}`;
-//   if (turns === 9) return "Draw";
-//   return `Next player: ${player}`;
-// }
 
 export function calculateStatus(winner: Winner, turns: number) {
   if (winner) {

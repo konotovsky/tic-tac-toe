@@ -10,7 +10,7 @@ export default function App() {
     case "menu":
       return <NewGameMenu />;
 
-    case "playing":
+    case "game":
       return <Board />;
 
     default:

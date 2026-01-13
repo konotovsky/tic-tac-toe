@@ -4,12 +4,14 @@ import iconO from "/images/icon-o.svg";
 import restartIcon from "/images/icon-restart.svg";
 import Square from "@/components/ui/Square";
 import { useGameStore } from "@/store/game.store";
+import { useEffect } from "react";
 import {
   calculateWinner,
   calculateStatus,
   calculateTurns,
 } from "@/utils/game.utils";
 import type { Player } from "@/types/game.types";
+import ResultOverlay from "./ResultOverlay";
 
 export default function Board() {
   const {
@@ -20,18 +22,14 @@ export default function Board() {
     togglePlayer,
     resetGame,
     score,
-    setScore,
+    roundResult,
+    finishRound,
   } = useGameStore();
 
   const player: Player = xIsNext ? "X" : "O";
   const winner = calculateWinner(squares);
   const turns = calculateTurns(squares);
-
-  const result = calculateStatus(winner, turns);
-
-  if (result) {
-    setScore(result);
-  }
+  const status = calculateStatus(winner, turns);
 
   function handleClick(i: number) {
     if (squares[i] || winner) return;
@@ -42,6 +40,12 @@ export default function Board() {
     setSquares(nextSquares);
     togglePlayer();
   }
+
+  useEffect(() => {
+    if (status && !roundResult) {
+      finishRound(status);
+    }
+  }, [status, roundResult, finishRound]);
 
   return (
     <>
@@ -62,22 +66,19 @@ export default function Board() {
           </div>
           <button
             onClick={resetGame}
-            className="flex cursor-pointer items-center justify-center justify-self-end rounded-[5px] bg-gray-200 p-3 shadow-[0_4px_0_0_#6B8997]"
+            className="flex cursor-pointer items-center justify-center justify-self-end rounded-[5px] bg-gray-200 p-3 shadow-[0_4px_0_0_#6B8997] transition-colors duration-300 hover:bg-gray-100"
           >
-            <div>
-              <img
-                className="w-full object-contain"
-                src={restartIcon}
-                alt="Reset game"
-              />
-            </div>
+            <img
+              className="w-full object-contain"
+              src={restartIcon}
+              alt="Reset game"
+            />
           </button>
         </div>
         <div className="grid grid-cols-3 grid-rows-3 gap-5">
           {squares.map((square, i) => (
-            <div className="aspect-square w-full">
+            <div key={i} className="aspect-square w-full">
               <Square
-                key={i}
                 value={square}
                 isWinning={winner?.lines.includes(i)}
                 onClick={() => handleClick(i)}
@@ -112,6 +113,14 @@ export default function Board() {
           </div>
         </div>
       </div>
+      {status && (
+        <ResultOverlay
+          status={status}
+          p1mark={p1mark}
+          onQuit={resetGame}
+          onNextRound={() => {}}
+        />
+      )}
     </>
   );
 }
