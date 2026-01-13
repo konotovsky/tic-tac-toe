@@ -103,7 +103,7 @@ export const useGameStore = create<GameState>()(
             ties: 0,
           },
         });
-        localStorage.removeItem("xo-game-storage");
+        useGameStore.persist.clearStorage();
       },
     })),
     {

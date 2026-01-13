@@ -89,7 +89,7 @@ export default function Board() {
         </div>
         <div className="grid grid-cols-3 gap-5">
           <div className="rounded-[10px] bg-teal-600 py-3 text-center">
-            <h2 className="font-outfit tracking-[0.75px text-slate-900] text-xs font-medium uppercase">
+            <h2 className="font-outfit text-xs font-medium tracking-[0.75px] text-slate-900 uppercase">
               {`X (${p1mark === "X" ? "P1" : "P2"})`}
             </h2>
             <p className="font-outfit text-xl font-bold tracking-[1.25px] text-slate-900">
@@ -105,7 +105,7 @@ export default function Board() {
             </p>
           </div>
           <div className="rounded-[10px] bg-amber-500 py-3 text-center">
-            <h2 className="font-outfit tracking-[0.75px text-slate-900] text-xs font-medium uppercase">
+            <h2 className="font-outfit text-xs font-medium tracking-[0.75px] text-slate-900 uppercase">
               {`O (${p1mark === "O" ? "P1" : "P2"})`}
             </h2>
             <p className="font-outfit text-xl font-bold tracking-[1.25px] text-slate-900">
@@ -114,7 +114,7 @@ export default function Board() {
           </div>
         </div>
       </div>
-      {status && (
+      {status && roundResult && (
         <ResultOverlay
           status={status}
           p1mark={p1mark}
