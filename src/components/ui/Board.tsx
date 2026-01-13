@@ -1,0 +1,117 @@
+import logo from "/images/logo.svg";
+import iconX from "/images/icon-x.svg";
+import iconO from "/images/icon-o.svg";
+import restartIcon from "/images/icon-restart.svg";
+import Square from "@/components/ui/Square";
+import { useGameStore } from "@/store/game.store";
+import {
+  calculateWinner,
+  calculateStatus,
+  calculateTurns,
+} from "@/utils/game.utils";
+import type { Player } from "@/types/game.types";
+
+export default function Board() {
+  const {
+    p1mark,
+    squares,
+    xIsNext,
+    setSquares,
+    togglePlayer,
+    resetGame,
+    score,
+    setScore,
+  } = useGameStore();
+
+  const player: Player = xIsNext ? "X" : "O";
+  const winner = calculateWinner(squares);
+  const turns = calculateTurns(squares);
+
+  const result = calculateStatus(winner, turns);
+
+  if (result) {
+    setScore(result);
+  }
+
+  function handleClick(i: number) {
+    if (squares[i] || winner) return;
+
+    const nextSquares = [...squares];
+    nextSquares[i] = player;
+
+    setSquares(nextSquares);
+    togglePlayer();
+  }
+
+  return (
+    <>
+      <div className="container mx-auto flex h-screen max-w-93.75 flex-col justify-between gap-16 p-6">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center">
+          <div className="h-8 w-18 justify-self-start">
+            <img className="w-full object-contain" src={logo} alt="Logo XO" />
+          </div>
+          <div className="flex items-center justify-center gap-2 justify-self-center rounded-[5px] bg-slate-800 px-4 py-3 shadow-[0_4px_0_0_#10212A]">
+            <img
+              className="h-4 w-4"
+              src={player === "X" ? iconX : iconO}
+              alt="Player icon"
+            />
+            <p className="font-outfit text-[14px] font-bold tracking-[0.88px] text-gray-200 uppercase">
+              Turn
+            </p>
+          </div>
+          <button
+            onClick={resetGame}
+            className="flex cursor-pointer items-center justify-center justify-self-end rounded-[5px] bg-gray-200 p-3 shadow-[0_4px_0_0_#6B8997]"
+          >
+            <div>
+              <img
+                className="w-full object-contain"
+                src={restartIcon}
+                alt="Reset game"
+              />
+            </div>
+          </button>
+        </div>
+        <div className="grid grid-cols-3 grid-rows-3 gap-5">
+          {squares.map((square, i) => (
+            <div className="aspect-square w-full">
+              <Square
+                key={i}
+                value={square}
+                isWinning={winner?.lines.includes(i)}
+                onClick={() => handleClick(i)}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-3 gap-5">
+          <div className="rounded-[10px] bg-teal-600 py-3 text-center">
+            <h2 className="font-outfit tracking-[0.75px text-slate-900] text-xs font-medium uppercase">
+              {`X (${p1mark === "X" ? "P1" : "P2"})`}
+            </h2>
+            <p className="font-outfit text-xl font-bold tracking-[1.25px] text-slate-900">
+              {score.X}
+            </p>
+          </div>
+          <div className="rounded-[10px] bg-gray-200 py-3 text-center">
+            <h2 className="font-outfit tracking-[0.75px text-slate-900] text-xs font-medium uppercase">
+              Ties
+            </h2>
+            <p className="font-outfit text-xl font-bold tracking-[1.25px] text-slate-900">
+              {score.ties}
+            </p>
+          </div>
+          <div className="rounded-[10px] bg-amber-500 py-3 text-center">
+            <h2 className="font-outfit tracking-[0.75px text-slate-900] text-xs font-medium uppercase">
+              {`O (${p1mark === "O" ? "P1" : "P2"})`}
+            </h2>
+            <p className="font-outfit text-xl font-bold tracking-[1.25px] text-slate-900">
+              {score.O}
+            </p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
