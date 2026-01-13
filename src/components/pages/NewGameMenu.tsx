@@ -17,7 +17,7 @@ export default function NewGameMenu() {
 
   return (
     <>
-      <div className="container mx-auto flex h-screen max-w-93.75 items-center justify-center px-6">
+      <div className="container mx-auto flex h-screen max-w-93.75 items-center justify-center px-6 md:max-w-115 md:px-0">
         <div className="flex w-full flex-col items-center gap-8">
           <div className="h-8 w-18">
             <img className="w-full object-contain" src={logo} alt="Logo XO" />
@@ -75,7 +75,7 @@ export default function NewGameMenu() {
           </div>
           <div className="flex w-full flex-col gap-4">
             <Button color="yellow">
-              <p className="font-outfit text-base font-bold tracking-[1px] text-slate-900 uppercase">
+              <p className="font-outfit cursor-not-allowed text-base font-bold tracking-[1px] text-slate-900 uppercase">
                 NEW GAME (VS CPU)
               </p>
             </Button>

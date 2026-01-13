@@ -17,7 +17,7 @@ export default function Square({ isWinning, value, onClick }: SquareProps) {
         <div className="flex items-center justify-center">
           <svg
             viewBox="0 0 64 64"
-            className="h-10 w-10"
+            className="h-10 w-10 md:h-16 md:w-16"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -32,7 +32,7 @@ export default function Square({ isWinning, value, onClick }: SquareProps) {
         <div className="flex items-center justify-center">
           <svg
             viewBox="0 0 64 64"
-            className="h-10 w-10"
+            className="h-10 w-10 md:h-16 md:w-16"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path

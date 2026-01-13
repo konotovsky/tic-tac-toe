@@ -18,12 +18,13 @@ export default function Board() {
     p1mark,
     squares,
     xIsNext,
+    score,
+    roundResult,
     setSquares,
     togglePlayer,
     resetGame,
-    score,
-    roundResult,
     finishRound,
+    nextRound,
   } = useGameStore();
 
   const player: Player = xIsNext ? "X" : "O";
@@ -49,27 +50,27 @@ export default function Board() {
 
   return (
     <>
-      <div className="container mx-auto flex h-screen max-w-93.75 flex-col justify-between gap-16 p-6">
+      <div className="container mx-auto flex h-screen max-w-93.75 flex-col justify-between gap-16 p-6 md:max-w-115 md:justify-center md:gap-5 md:px-0">
         <div className="grid grid-cols-[1fr_auto_1fr] items-center">
           <div className="h-8 w-18 justify-self-start">
             <img className="w-full object-contain" src={logo} alt="Logo XO" />
           </div>
-          <div className="flex items-center justify-center gap-2 justify-self-center rounded-[5px] bg-slate-800 px-4 py-3 shadow-[0_4px_0_0_#10212A]">
+          <div className="flex items-center justify-center gap-2 justify-self-center rounded-[5px] bg-slate-800 px-3.75 py-2.25 shadow-[0_4px_0_0_#10212A] md:px-8.5 md:py-3.5">
             <img
               className="h-4 w-4"
               src={player === "X" ? iconX : iconO}
               alt="Player icon"
             />
-            <p className="font-outfit text-[14px] font-bold tracking-[0.88px] text-gray-200 uppercase">
+            <p className="font-outfit text-[14px] font-bold tracking-[0.88px] text-gray-200 uppercase md:text-base md:tracking-[1px]">
               Turn
             </p>
           </div>
           <button
             onClick={resetGame}
-            className="flex cursor-pointer items-center justify-center justify-self-end rounded-[5px] bg-gray-200 p-3 shadow-[0_4px_0_0_#6B8997] transition-colors duration-300 hover:bg-gray-100"
+            className="flex cursor-pointer items-center justify-center justify-self-end rounded-[5px] bg-gray-200 p-3 shadow-[0_4px_0_0_#6B8997] transition-colors duration-300 hover:bg-gray-100 md:p-4"
           >
             <img
-              className="w-full object-contain"
+              className="h-4 w-4 object-contain md:h-5 md:w-5"
               src={restartIcon}
               alt="Reset game"
             />
@@ -118,7 +119,7 @@ export default function Board() {
           status={status}
           p1mark={p1mark}
           onQuit={resetGame}
-          onNextRound={() => {}}
+          onNextRound={nextRound}
         />
       )}
     </>

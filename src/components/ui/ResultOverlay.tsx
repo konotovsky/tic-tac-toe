@@ -3,6 +3,7 @@ import type { ResultOverlayProps } from "@/types/ui.types";
 import iconX from "/images/icon-x.svg";
 import iconO from "/images/icon-o.svg";
 import Button from "./Button";
+import clsx from "clsx";
 
 export default function ResultOverlay({
   status,
@@ -15,9 +16,9 @@ export default function ResultOverlay({
   return (
     <div className="fixed inset-0 flex flex-col justify-center bg-black/70">
       <div className="flex flex-col items-center justify-center gap-4 bg-slate-800 p-12">
-        <h2 className="font-outfit text-[14px] font-bold tracking-[0.88px] text-gray-200 uppercase">
+        <h2 className="font-outfit text-[14px] font-bold tracking-[0.88px] text-gray-200 uppercase md:text-base md:tracking-[1px]">
           {isTie ? (
-            <p className="font-outfit text-2xl font-bold tracking-[1.5px] text-gray-200 uppercase">
+            <p className="font-outfit text-2xl font-bold tracking-[1.5px] text-gray-200 uppercase md:text-[40px] md:tracking-[2.5px]">
               ROUND TIED
             </p>
           ) : (
@@ -25,13 +26,21 @@ export default function ResultOverlay({
           )}
         </h2>
         {!isTie && (
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-2 md:gap-6">
             <img
-              className="h-7.5 w-7.5"
+              className="h-7.5 w-7.5 md:h-16 md:w-16"
               src={status === "X" ? iconX : iconO}
               alt="Player icon"
             />
-            <p className="font-outfit text-2xl font-bold tracking-[1.5px] whitespace-nowrap text-teal-600 uppercase">
+            <p
+              className={clsx(
+                "font-outfit text-2xl font-bold tracking-[1.5px] whitespace-nowrap uppercase md:text-[40px] md:tracking-[2.5px]",
+                {
+                  "text-teal-600": status === "X",
+                  "text-amber-500": status === "O",
+                },
+              )}
+            >
               TAKES THE ROUND
             </p>
           </div>

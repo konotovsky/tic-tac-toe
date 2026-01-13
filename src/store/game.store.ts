@@ -24,6 +24,7 @@ type GameState = {
   startGame: () => void;
   resetGame: () => void;
   finishRound: (result: GameResult) => void;
+  nextRound: () => void;
 };
 
 const createInitialSquares = () => Array<SquareValue>(9).fill(null);
@@ -82,11 +83,20 @@ export const useGameStore = create<GameState>()(
           }
         }),
 
+      nextRound: () =>
+        set((state) => {
+          state.squares = createInitialSquares();
+          state.xIsNext = true;
+          state.roundResult = null;
+        }),
+
       resetGame: () => {
         set({
+          p1mark: "X",
           phase: "menu",
           squares: createInitialSquares(),
           xIsNext: true,
+          roundResult: null,
           score: {
             X: 0,
             O: 0,
