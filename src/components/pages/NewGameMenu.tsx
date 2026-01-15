@@ -9,7 +9,7 @@ import type { Player } from "@/types/game.types";
 export default function NewGameMenu() {
   const p1mark = useGameStore((state) => state.p1mark);
   const setP1Mark = useGameStore((state) => state.setP1Mark);
-  const startGame = useGameStore((state) => state.startGame);
+  const { setMode, startGame } = useGameStore();
 
   const onClick = (player: Player) => {
     setP1Mark(player);
@@ -74,8 +74,14 @@ export default function NewGameMenu() {
             </h2>
           </div>
           <div className="flex w-full flex-col gap-4">
-            <Button color="yellow">
-              <p className="font-outfit cursor-not-allowed text-base font-bold tracking-[1px] text-slate-900 uppercase">
+            <Button
+              color="yellow"
+              onClick={() => {
+                setMode("cpu");
+                startGame();
+              }}
+            >
+              <p className="font-outfit text-base font-bold tracking-[1px] text-slate-900 uppercase">
                 NEW GAME (VS CPU)
               </p>
             </Button>

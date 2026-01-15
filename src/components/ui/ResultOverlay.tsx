@@ -7,7 +7,8 @@ import clsx from "clsx";
 
 export default function ResultOverlay({
   status,
-  p1mark,
+  title,
+  subtitle,
   onQuit,
   onNextRound,
 }: ResultOverlayProps) {
@@ -16,15 +17,14 @@ export default function ResultOverlay({
   return (
     <div className="fixed inset-0 flex flex-col justify-center bg-black/70">
       <div className="flex flex-col items-center justify-center gap-4 bg-slate-800 p-12">
-        <h2 className="font-outfit text-[14px] font-bold tracking-[0.88px] text-gray-200 uppercase md:text-base md:tracking-[1px]">
-          {isTie ? (
-            <p className="font-outfit text-2xl font-bold tracking-[1.5px] text-gray-200 uppercase md:text-[40px] md:tracking-[2.5px]">
-              ROUND TIED
-            </p>
-          ) : (
-            `${status === p1mark ? "PLAYER 1" : "PLAYER 2"} WINS!`
-          )}
+        <p className="font-outfit text-sm font-bold tracking-[1px] text-gray-200 uppercase">
+          {subtitle}
+        </p>
+
+        <h2 className="font-outfit text-sm font-bold tracking-[1px] text-gray-200 uppercase">
+          {title}
         </h2>
+
         {!isTie && (
           <div className="flex items-center justify-center gap-2 md:gap-6">
             <img
@@ -45,13 +45,14 @@ export default function ResultOverlay({
             </p>
           </div>
         )}
+
         <div className="flex gap-4">
           <div>
             <Button color="gray" variant="secondary" onClick={onQuit}>
               QUIT
             </Button>
           </div>
-          <div className="whitespace-nowrap">
+          <div>
             <Button color="yellow" variant="secondary" onClick={onNextRound}>
               NEXT ROUND
             </Button>

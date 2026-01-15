@@ -9,6 +9,7 @@ import type {
   Player,
   Score,
   GameResult,
+  GameMode,
 } from "@/types/game.types";
 
 type GameState = {
@@ -18,6 +19,8 @@ type GameState = {
   phase: GamePhase;
   score: Score;
   roundResult: GameResult | null;
+  mode: GameMode;
+  setMode: (mode: GameMode) => void;
   setP1Mark: (p1mark: Player) => void;
   setSquares: (squares: SquareValue[]) => void;
   togglePlayer: () => void;
@@ -56,6 +59,9 @@ export const useGameStore = create<GameState>()(
         O: 0,
         ties: 0,
       },
+      mode: "pvp",
+
+      setMode: (mode) => set({ mode }),
 
       setP1Mark: (p1mark) => set({ p1mark }),
 
@@ -92,16 +98,13 @@ export const useGameStore = create<GameState>()(
 
       resetGame: () => {
         set({
+          mode: "pvp",
           p1mark: "X",
           phase: "menu",
           squares: createInitialSquares(),
           xIsNext: true,
           roundResult: null,
-          score: {
-            X: 0,
-            O: 0,
-            ties: 0,
-          },
+          score: { X: 0, O: 0, ties: 0 },
         });
         useGameStore.persist.clearStorage();
       },

@@ -8,6 +8,8 @@ export type GameResult = Player | "tie";
 
 export type WinLine = [number, number, number];
 
+export type GameMode = "pvp" | "cpu";
+
 export type Winner = {
   player: Player;
   lines: WinLine;

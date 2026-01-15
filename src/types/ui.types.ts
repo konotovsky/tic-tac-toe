@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { SquareValue, GameResult, Player } from "./game.types";
+import type { SquareValue, GameResult } from "./game.types";
 
 export type ButtonColor = "yellow" | "blue" | "gray" | "slate";
 
@@ -20,7 +20,8 @@ export interface SquareProps {
 
 export interface ResultOverlayProps {
   status: GameResult;
-  p1mark: Player;
+  title: string;
+  subtitle?: string;
   onNextRound: () => void;
   onQuit: () => void;
 }

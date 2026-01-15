@@ -10,8 +10,9 @@ import {
   calculateStatus,
   calculateTurns,
 } from "@/utils/game.utils";
-import type { Player } from "@/types/game.types";
+import type { Player, GameResult } from "@/types/game.types";
 import ResultOverlay from "./ResultOverlay";
+import { getBestMove } from "@/utils/minimax";
 
 export default function Board() {
   const {
@@ -20,6 +21,7 @@ export default function Board() {
     xIsNext,
     score,
     roundResult,
+    mode,
     setSquares,
     togglePlayer,
     resetGame,
@@ -31,8 +33,13 @@ export default function Board() {
   const winner = calculateWinner(squares);
   const turns = calculateTurns(squares);
   const status = calculateStatus(winner, turns);
+  const cpuPlayer: Player = p1mark === "X" ? "O" : "X";
+  const humanPlayer: Player = p1mark;
+  const isCpuTurn =
+    mode === "cpu" && player === cpuPlayer && !winner && !roundResult;
 
   function handleClick(i: number) {
+    if (isCpuTurn) return;
     if (squares[i] || winner) return;
 
     const nextSquares = [...squares];
@@ -47,6 +54,56 @@ export default function Board() {
       finishRound(status);
     }
   }, [status, roundResult, finishRound]);
+
+  useEffect(() => {
+    if (!isCpuTurn) return;
+
+    const timeout = setTimeout(() => {
+      const move = getBestMove(squares, cpuPlayer, humanPlayer);
+      if (move === null) return;
+
+      const nextSquares = [...squares];
+      nextSquares[move] = cpuPlayer;
+
+      setSquares(nextSquares);
+      togglePlayer();
+    }, 400);
+
+    return () => clearTimeout(timeout);
+  }, [isCpuTurn, squares]);
+
+  function getScoreLabel(mark: Player) {
+    if (mode === "cpu") {
+      return mark === p1mark ? "YOU" : "CPU";
+    }
+
+    return mark === p1mark ? "P1" : "P2";
+  }
+
+  function getOverlayText(status: GameResult) {
+    if (status === "tie") {
+      return {
+        title: "ROUND TIED",
+        subtitle: "",
+      };
+    }
+
+    if (mode === "cpu") {
+      const isPlayerWin = status === p1mark;
+
+      return {
+        title: isPlayerWin ? "YOU WON!" : "OH NO, YOU LOST…",
+        subtitle: "",
+      };
+    }
+
+    return {
+      title: `${status === p1mark ? "PLAYER 1" : "PLAYER 2"} WINS!`,
+      subtitle: "",
+    };
+  }
+
+  const overlayText = status ? getOverlayText(status) : null;
 
   return (
     <>
@@ -90,7 +147,7 @@ export default function Board() {
         <div className="grid grid-cols-3 gap-5">
           <div className="rounded-[10px] bg-teal-600 py-3 text-center">
             <h2 className="font-outfit text-xs font-medium tracking-[0.75px] text-slate-900 uppercase">
-              {`X (${p1mark === "X" ? "P1" : "P2"})`}
+              {`X (${getScoreLabel("X")})`}
             </h2>
             <p className="font-outfit text-xl font-bold tracking-[1.25px] text-slate-900">
               {score.X}
@@ -106,7 +163,7 @@ export default function Board() {
           </div>
           <div className="rounded-[10px] bg-amber-500 py-3 text-center">
             <h2 className="font-outfit text-xs font-medium tracking-[0.75px] text-slate-900 uppercase">
-              {`O (${p1mark === "O" ? "P1" : "P2"})`}
+              {`O (${getScoreLabel("O")})`}
             </h2>
             <p className="font-outfit text-xl font-bold tracking-[1.25px] text-slate-900">
               {score.O}
@@ -114,10 +171,11 @@ export default function Board() {
           </div>
         </div>
       </div>
-      {status && roundResult && (
+      {status && roundResult && overlayText && (
         <ResultOverlay
           status={status}
-          p1mark={p1mark}
+          title={overlayText.title}
+          subtitle={overlayText.subtitle}
           onQuit={resetGame}
           onNextRound={nextRound}
         />
