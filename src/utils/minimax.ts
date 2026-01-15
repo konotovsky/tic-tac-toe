@@ -20,7 +20,8 @@ function evaluate(
   const winner = calculateWinner(squares);
 
   if (winner) {
-    return winner.player === cpu ? 10 : -10;
+    if (winner.player === cpu) return 10;
+    if (winner.player === human) return -10;
   }
 
   if (calculateTurns(squares) === 9) {
