@@ -107,7 +107,7 @@ export default function Board() {
 
   return (
     <>
-      <div className="container mx-auto flex h-screen max-w-93.75 flex-col justify-between gap-16 p-6 md:max-w-115 md:justify-center md:gap-5 md:px-0">
+      <div className="container mx-auto flex h-dvh max-w-93.75 flex-col justify-between gap-16 p-6 md:max-w-115 md:justify-center md:gap-5 md:px-0">
         <div className="grid grid-cols-[1fr_auto_1fr] items-center">
           <div className="h-8 w-18 justify-self-start">
             <img className="w-full object-contain" src={logo} alt="Logo XO" />
