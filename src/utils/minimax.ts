@@ -37,10 +37,12 @@ function minimax(
   isMaximizing: boolean,
   cpu: Player,
   human: Player,
+  maxDepth: number,
 ): MoveScore {
   const evaluation = evaluate(squares, cpu, human);
-  if (evaluation !== null) {
-    return { move: null, score: evaluation - depth };
+
+  if (evaluation !== null || depth === maxDepth) {
+    return { move: null, score: evaluation ?? 0 };
   }
 
   const moves = getAvailableMoves(squares);
@@ -53,7 +55,7 @@ function minimax(
       const next = [...squares];
       next[move] = cpu;
 
-      const result = minimax(next, depth + 1, false, cpu, human);
+      const result = minimax(next, depth + 1, false, cpu, human, maxDepth);
 
       if (result.score > bestScore) {
         bestScore = result.score;
@@ -69,7 +71,7 @@ function minimax(
       const next = [...squares];
       next[move] = human;
 
-      const result = minimax(next, depth + 1, true, cpu, human);
+      const result = minimax(next, depth + 1, true, cpu, human, maxDepth);
 
       if (result.score < bestScore) {
         bestScore = result.score;
@@ -86,5 +88,11 @@ export function getBestMove(
   cpu: Player,
   human: Player,
 ): number | null {
-  return minimax(squares, 0, true, cpu, human).move;
+  const available = getAvailableMoves(squares);
+
+  if (Math.random() < 0.2) {
+    return available[Math.floor(Math.random() * available.length)];
+  }
+
+  return minimax(squares, 0, true, cpu, human, 3).move;
 }
